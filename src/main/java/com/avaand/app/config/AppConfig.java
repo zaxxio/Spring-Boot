@@ -5,6 +5,7 @@ import com.avaand.app.event.BoomEvent;
 import lombok.extern.java.Log;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -22,6 +23,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @EnableAsync
 @Configuration
 @EnableScheduling
+@EnableCaching
 @EnableConfigurationProperties
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @ConfigurationPropertiesScan("com.avaand.app")
