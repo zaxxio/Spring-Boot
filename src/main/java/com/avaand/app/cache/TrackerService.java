@@ -1,5 +1,7 @@
 package com.avaand.app.cache;
 
+import com.avaand.app.cache.model.Tracker;
+
 import java.util.List;
 
 public interface TrackerService {

@@ -1,5 +1,7 @@
 package com.avaand.app.bootloader;
 
+import com.avaand.app.cache.impl.TrackerServiceImpl;
+import com.avaand.app.cache.model.Tracker;
 import com.avaand.app.lifecycle.LifeCycle;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.Waiter;
@@ -42,6 +44,17 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         LifeCycle lifecycleA = context.getBean(LifeCycle.class); // calls new object prototype
         LifeCycle lifeCycleB = context.getBean(LifeCycle.class); // calls new object prototype
         log.info(String.valueOf(lifecycleA.equals(lifeCycleB)));
+
+        // Using Loop to demonstrate CacheManager
+        TrackerServiceImpl trackerService = context.getBean(TrackerServiceImpl.class);
+        for (int i = 0; i < 10; i++) {
+            trackerService.getTrackers();
+            log.info("Loop Index : " + i);
+        }
+        // Cache Manager will call the data from the cached data source. Makes it more efficient
+        trackerService.findTracker(new Tracker(1, null));
+        trackerService.findTracker(new Tracker(1, null));
+
     }
 
     @PreDestroy

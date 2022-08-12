@@ -1,4 +1,4 @@
-package com.avaand.app.cache;
+package com.avaand.app.cache.model;
 
 
 import lombok.AllArgsConstructor;
