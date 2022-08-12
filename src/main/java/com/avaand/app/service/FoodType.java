@@ -1,2 +1,5 @@
-package com.avaand.app.service;public class FoodType {
+package com.avaand.app.service;
+
+public enum FoodType {
+    PIZZA, PASTA
 }

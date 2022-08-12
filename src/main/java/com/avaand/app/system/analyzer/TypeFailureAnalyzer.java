@@ -1,4 +1,4 @@
-package com.avaand.app.diagnostic.analyzer;
+package com.avaand.app.system.analyzer;
 
 import org.springframework.beans.factory.BeanNotOfRequiredTypeException;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;

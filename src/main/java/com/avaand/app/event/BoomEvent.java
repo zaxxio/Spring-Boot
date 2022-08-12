@@ -1,15 +1,22 @@
 package com.avaand.app.event;
 
+import lombok.Getter;
 import lombok.extern.java.Log;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.stereotype.Component;
 
 @Log
-@Component
-public class TickEvent extends ApplicationEvent {
+@Getter
+public class BoomEvent extends ApplicationEvent {
 
-    
-    public TickEvent(Object source) {
+    private final String message;
+
+    public BoomEvent(Object source, String message) {
         super(source);
+        this.message = message;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
 }

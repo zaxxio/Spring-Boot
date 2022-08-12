@@ -1,4 +1,4 @@
 package com.avaand.app.utility;
 
-public class Damn {
+public class Utility {
 }

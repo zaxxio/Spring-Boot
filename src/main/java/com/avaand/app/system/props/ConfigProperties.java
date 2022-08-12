@@ -1,4 +1,4 @@
-package com.avaand.app.utility;
+package com.avaand.app.system.props;
 
 import lombok.Getter;
 import lombok.Setter;
