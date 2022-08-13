@@ -8,13 +8,17 @@ import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Locale;
 
 @Log
 @Component
@@ -26,6 +30,10 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final ConfigProperties configProperties;
 
     private ApplicationContext context;
+
+    @Autowired
+    private MessageSource messageSource;
+
 
     @PostConstruct
     public void onCreate(){
@@ -39,6 +47,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
     @Override
     public void run(String... args) throws Exception {
+        log.info(messageSource.getMessage("welcome",null, Locale.FRENCH));
         log.info(waiter.deliverFood(FoodType.PIZZA));
         log.info(configProperties.getUsername());
         LifeCycle lifecycleA = context.getBean(LifeCycle.class); // calls new object prototype

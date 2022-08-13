@@ -3,6 +3,7 @@ package com.avaand.app.config;
 import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
 import lombok.extern.java.Log;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -19,6 +20,8 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.*;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import java.util.Locale;
+
 @Log
 @EnableAsync
 @Configuration
@@ -26,6 +29,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @EnableCaching
 @EnableConfigurationProperties
 @EnableAspectJAutoProxy(proxyTargetClass = true)
+@PropertySource("classpath:/i18n/message.properties")
 @ConfigurationPropertiesScan("com.avaand.app")
 @PropertySource("classpath:application.properties")
 public class AppConfig {
@@ -47,7 +51,7 @@ public class AppConfig {
     public MessageSource messageSource(){
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setFallbackToSystemLocale(true);
+        messageSource.setDefaultLocale(Locale.FRENCH);
         messageSource.setBasename("/i18n/message");
         return messageSource;
     }
