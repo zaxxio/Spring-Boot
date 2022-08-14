@@ -3,6 +3,8 @@ package com.avaand.app.bootloader;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
 import com.avaand.app.lifecycle.LifeCycle;
+import com.avaand.app.model.BankService;
+import com.avaand.app.model.impl.BankServiceImpl;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
@@ -64,6 +66,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         trackerService.findTracker(new Tracker(1, null));
         trackerService.findTracker(new Tracker(1, null));
 
+
+        BankService bankService = context.getBean(BankServiceImpl.class);
+        bankService.deposit(100);
     }
 
     @PreDestroy
