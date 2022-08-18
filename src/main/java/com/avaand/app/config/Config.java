@@ -1,5 +1,6 @@
 package com.avaand.app.config;
 
+import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
 import com.avaand.app.model.BankService;
 import lombok.extern.java.Log;
 import org.springframework.aop.framework.ProxyFactoryBean;
@@ -13,11 +14,13 @@ import org.springframework.context.annotation.Primary;
 @EnableAspectJAutoProxy
 public class Config {
 
-
     private final BankService bankService;
+    private final BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener;
 
-    public Config(BankService bankService) {
+
+    public Config(BankService bankService, BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener) {
         this.bankService = bankService;
+        this.bankServiceMethodInterceptorListener = bankServiceMethodInterceptorListener;
     }
 
     @Bean
@@ -26,17 +29,7 @@ public class Config {
         ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
         proxyFactoryBean.setTarget(bankService);
         proxyFactoryBean.setInterceptorNames("bankServiceLogInterceptor");
-        /*proxyFactoryBean.addListener(new AdvisedSupportListener() {
-            @Override
-            public void activated(AdvisedSupport advised) {
-                System.out.println("A");
-            }
-
-            @Override
-            public void adviceChanged(AdvisedSupport advised) {
-                System.out.println("B");
-            }
-        });*/
+        proxyFactoryBean.addListener(bankServiceMethodInterceptorListener);
         return proxyFactoryBean;
     }
 
