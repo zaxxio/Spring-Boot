@@ -1,10 +1,12 @@
 package com.avaand.app.aop;
 
 import com.avaand.app.service.FoodType;
+import com.avaand.app.service.Waiter;
 import lombok.extern.java.Log;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.stereotype.Component;
 
 @Log
@@ -38,6 +40,13 @@ public class WaiterAspect {
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @AfterReturning("execution(* com.avaand.app.service.Waiter.deliverFood(..)) && args(foodType)")
+    public void afterReturningDeliverFood(JoinPoint point, FoodType foodType){
+        log.info("==================================================");
+        log.info("After Returning : " + point.getSignature());
+        log.info("Food Type is : " + ((Waiter) point.getTarget()).deliverFood(foodType));
     }
 
 }

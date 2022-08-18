@@ -27,8 +27,8 @@ import java.util.Locale;
 @Log
 @EnableAsync
 @Configuration
-@EnableScheduling
 @EnableCaching
+@EnableScheduling
 @EnableConfigurationProperties
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @PropertySource("classpath:/i18n/message.properties")

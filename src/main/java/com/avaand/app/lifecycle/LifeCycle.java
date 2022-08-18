@@ -44,4 +44,5 @@ public class LifeCycle implements InitializingBean, DisposableBean{
     public void afterPropertiesSet() throws Exception {
         // on create
     }
+
 }

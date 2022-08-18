@@ -3,6 +3,7 @@ package com.avaand.app.bootloader;
 import com.avaand.app.async.AsynchronousExecutor;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
+import com.avaand.app.domain.User;
 import com.avaand.app.lifecycle.LifeCycle;
 import com.avaand.app.model.BankService;
 import com.avaand.app.model.impl.BankServiceImpl;
@@ -12,11 +13,11 @@ import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -35,8 +36,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
     private ApplicationContext context;
 
-    @Autowired
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
+
+    private final ConversionService conversionService;
 
 
     @PostConstruct
@@ -44,9 +46,12 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         log.info("On Create Method");
     }
 
-    public BootLoader(Waiter waiter, ConfigProperties configProperties) {
+    public BootLoader(Waiter waiter, ConfigProperties configProperties, ApplicationContext context, MessageSource messageSource, ConversionService conversionService) {
         this.waiter = waiter;
         this.configProperties = configProperties;
+        this.context = context;
+        this.messageSource = messageSource;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -77,6 +82,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         CompletableFuture<String> result = asynchronousExecutor.asyncExecutionWithReturnType("Hello World");
         log.info(result.get());
         asynchronousExecutor.asyncExecution();
+
+        User user = conversionService.convert("1,Partha,12345", User.class);
+        log.info(user.toString());
 
     }
 
