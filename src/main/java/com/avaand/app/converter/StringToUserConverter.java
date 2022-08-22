@@ -6,13 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StringToUserConverter implements Converter<String, User> {
-
-    private User user;
-
     @Override
     public User convert(String source) {
         String[] split = source.split(",");
-        user = new User(Double.parseDouble(split[0]), split[1], split[2]);
+        User user = new User(Double.parseDouble(split[0]), split[1], split[2]);
         return user;
     }
 }

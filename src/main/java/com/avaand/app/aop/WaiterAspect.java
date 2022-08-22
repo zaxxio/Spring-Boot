@@ -6,7 +6,6 @@ import lombok.extern.java.Log;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.stereotype.Component;
 
 @Log

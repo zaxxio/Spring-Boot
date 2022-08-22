@@ -15,9 +15,9 @@ public class AsynchronousExecutor {
         log.info("Asynchronous Execution without Return Type");
     }
 
-
     @Async
     public CompletableFuture<String> asyncExecutionWithReturnType(String name){
         return CompletableFuture.completedFuture(name);
     }
+
 }

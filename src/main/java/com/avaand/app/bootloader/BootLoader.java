@@ -12,7 +12,7 @@ import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -29,8 +29,6 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
-    /*@Resource(name = "A")
-    private A a;*/
     private final Waiter waiter;
     private final ConfigProperties configProperties;
 
@@ -56,7 +54,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info(messageSource.getMessage("welcome",null, Locale.FRENCH));
+        log.info(messageSource.getMessage("welcome",null, Locale.US));
         log.info(waiter.deliverFood(FoodType.PIZZA));
         log.info(configProperties.getUsername());
         LifeCycle lifecycleA = context.getBean(LifeCycle.class); // calls new object prototype
@@ -67,8 +65,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         TrackerServiceImpl trackerService = context.getBean(TrackerServiceImpl.class);
         for (int i = 0; i < 10; i++) {
             trackerService.getTrackers();
-            log.info("Loop Index : " + i);
+            log.info("Loop Index -> " + i);
         }
+
         // Cache Manager will call the data from the cached data source. Makes it more efficient
         trackerService.findTracker(new Tracker(1, null));
         trackerService.findTracker(new Tracker(1, null));
@@ -85,7 +84,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
         User user = conversionService.convert("1,Partha,12345", User.class);
         log.info(user.toString());
-
+        
     }
 
     @PreDestroy
@@ -97,4 +96,5 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
     }
+
 }

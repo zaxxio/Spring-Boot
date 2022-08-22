@@ -25,7 +25,7 @@ public class LifeCycle implements InitializingBean, DisposableBean{
     }
 
     @PreDestroy
-    public void onLifeCycleDestroyed(){
+    public void onLifeCycleDestroy(){
         log.info("LifeCycle Destroyed.");
     }
 

@@ -19,7 +19,6 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.Locale;
@@ -30,15 +29,15 @@ import java.util.Locale;
 @EnableCaching
 @EnableScheduling
 @EnableConfigurationProperties
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-@PropertySource("classpath:/i18n/message.properties")
 @ConfigurationPropertiesScan("com.avaand.app")
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @PropertySource("classpath:application.properties")
-public class AppConfig {
+@PropertySource("classpath:/i18n/message_en.properties")
+public class ApplicationConfig {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    public AppConfig(ApplicationEventPublisher eventPublisher) {
+    public ApplicationConfig(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
     }
 
@@ -54,7 +53,7 @@ public class AppConfig {
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
         messageSource.setDefaultEncoding("UTF-8");
         messageSource.setDefaultLocale(Locale.FRENCH);
-        messageSource.setBasename("/i18n/message");
+        messageSource.setBasename("classpath:/i18n/message");
         return messageSource;
     }
 
@@ -76,7 +75,7 @@ public class AppConfig {
         log.info("Fixed Delay : " + System.currentTimeMillis() / 1000);
     }
 
-    @Scheduled(cron = "30/5 * * * * *")
+    //@Scheduled(cron = "30/5 * * * * *")
     public void cronScheduling(){
         log.info("Cron Triggered");
         eventPublisher.publishEvent(new BoomEvent(this,"I am triggered to listen from Boom Event"));
