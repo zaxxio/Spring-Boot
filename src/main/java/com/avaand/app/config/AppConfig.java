@@ -1,27 +1,35 @@
 package com.avaand.app.config;
 
+import com.avaand.app.converter.StringToUserConverter;
 import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
+import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
+import com.avaand.app.model.BankService;
 import lombok.extern.java.Log;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
+import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 @Log
 @EnableAsync
@@ -33,12 +41,18 @@ import java.util.Locale;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @PropertySource("classpath:application.properties")
 @PropertySource("classpath:/i18n/message_en.properties")
-public class ApplicationConfig {
+public class AppConfig {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    public ApplicationConfig(ApplicationEventPublisher eventPublisher) {
+    private final BankService bankService;
+    private final BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener;
+
+
+    public AppConfig(ApplicationEventPublisher eventPublisher, BankService bankService, BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener) {
         this.eventPublisher = eventPublisher;
+        this.bankService = bankService;
+        this.bankServiceMethodInterceptorListener = bankServiceMethodInterceptorListener;
     }
 
     @Bean("applicationEventMulticaster")
@@ -65,17 +79,17 @@ public class ApplicationConfig {
         return threadPoolTaskScheduler;
     }
 
-    @EventListener(condition = "#event.success == true")
-    public void eventListener(ApplicationEventManager<String> event){
+    @EventListener(condition = "#eventManager.success")
+    public void eventListener(ApplicationEventManager<String> eventManager){
         log.info("Application Event is a success !!");
     }
 
-    //@Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 1000)
     public void fixedDelayScheduling(){
         log.info("Fixed Delay : " + System.currentTimeMillis() / 1000);
     }
 
-    //@Scheduled(cron = "30/5 * * * * *")
+    @Scheduled(cron = "30/5 * * * * *")
     public void cronScheduling(){
         log.info("Cron Triggered");
         eventPublisher.publishEvent(new BoomEvent(this,"I am triggered to listen from Boom Event"));
@@ -86,5 +100,29 @@ public class ApplicationConfig {
     public void fixedRateScheduling(){
         log.info("Fixed Rate : " + System.currentTimeMillis() / 1000);
     }
+
+
+    @Bean("conversionService")
+    @Primary
+    public ConversionService conversionService(ApplicationContext ctx){
+        ConversionServiceFactoryBean conversionServiceFactoryBean = new ConversionServiceFactoryBean();
+        Set<Converter<?,?>> converters = new HashSet<>();
+        converters.add(ctx.getBean(StringToUserConverter.class));
+        conversionServiceFactoryBean.setConverters(converters);
+        conversionServiceFactoryBean.afterPropertiesSet(); // Important afterPropertiesSet
+        return conversionServiceFactoryBean.getObject();
+    }
+
+    @Bean
+    @Primary
+    public ProxyFactoryBean bankServiceMethodInterceptor() {
+        ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+        proxyFactoryBean.setTarget(bankService);
+        proxyFactoryBean.setInterceptorNames("bankServiceLogInterceptor");
+        proxyFactoryBean.addListener(bankServiceMethodInterceptorListener);
+        return proxyFactoryBean;
+    }
+
+
 
 }
