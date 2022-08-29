@@ -84,12 +84,12 @@ public class AppConfig {
         log.info("Application Event is a success !!");
     }
 
-    @Scheduled(fixedDelay = 1000)
+    //@Scheduled(fixedDelay = 1000)
     public void fixedDelayScheduling(){
         log.info("Fixed Delay : " + System.currentTimeMillis() / 1000);
     }
 
-    @Scheduled(cron = "30/5 * * * * *")
+    //@Scheduled(cron = "30/5 * * * * *")
     public void cronScheduling(){
         log.info("Cron Triggered");
         eventPublisher.publishEvent(new BoomEvent(this,"I am triggered to listen from Boom Event"));
