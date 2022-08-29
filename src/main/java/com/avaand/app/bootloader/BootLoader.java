@@ -3,19 +3,15 @@ package com.avaand.app.bootloader;
 import com.avaand.app.async.AsynchronousExecutor;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
-import com.avaand.app.domain.Consumer;
 import com.avaand.app.domain.User;
 import com.avaand.app.lifecycle.LifeCycle;
 import com.avaand.app.model.BankService;
 import com.avaand.app.model.impl.BankServiceImpl;
-import com.avaand.app.repository.ConsumerRepository;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
-import net.bytebuddy.dynamic.DynamicType;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -25,12 +21,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
@@ -47,21 +37,22 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
     private final ConversionService conversionService;
 
-    private final ConsumerRepository consumerRepository;
-
 
     @PostConstruct
     public void onCreate(){
         log.info("On Create Method");
     }
 
-    public BootLoader(Waiter waiter, ConfigProperties configProperties, ApplicationContext context, MessageSource messageSource, ConversionService conversionService, ConsumerRepository consumerRepository) {
+    public BootLoader(Waiter waiter,
+                      ConfigProperties configProperties,
+                      ApplicationContext context,
+                      MessageSource messageSource,
+                      ConversionService conversionService) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
         this.messageSource = messageSource;
         this.conversionService = conversionService;
-        this.consumerRepository = consumerRepository;
     }
 
     @Override
@@ -96,11 +87,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
         User user = conversionService.convert("1,Partha,12345", User.class);
         log.info(user.toString());
-
-        Consumer consumer = new Consumer();
-        consumer.setConsumerName("developer@dev.com");
-        consumer.setPassword("1234");
-        consumerRepository.save(consumer);
 
     }
 

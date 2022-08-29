@@ -1,6 +1,7 @@
 package com.avaand.app.config;
 
 import com.avaand.app.converter.StringToUserConverter;
+import com.avaand.app.converter.tag.ConverterService;
 import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
 import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
@@ -29,6 +30,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 @Log
@@ -107,7 +109,10 @@ public class AppConfig {
     public ConversionService conversionService(ApplicationContext ctx){
         ConversionServiceFactoryBean conversionServiceFactoryBean = new ConversionServiceFactoryBean();
         Set<Converter<?,?>> converters = new HashSet<>();
-        converters.add(ctx.getBean(StringToUserConverter.class));
+        Map<String, Object> ctxMap = ctx.getBeansWithAnnotation(ConverterService.class);
+        for (Map.Entry<String, Object> entry : ctxMap.entrySet()) {
+            converters.add((Converter<?, ?>) entry.getValue());
+        }
         conversionServiceFactoryBean.setConverters(converters);
         conversionServiceFactoryBean.afterPropertiesSet(); // Important afterPropertiesSet
         return conversionServiceFactoryBean.getObject();
