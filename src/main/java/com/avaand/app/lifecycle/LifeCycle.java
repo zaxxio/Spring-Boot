@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.sound.midi.Track;
 
 @Log
 @Component
@@ -30,6 +29,7 @@ public class LifeCycle implements InitializingBean, DisposableBean{
     }
 
 
+    // Todo: Every time it generates a new object
     @Lookup
     public Tracker getTracker(){
         return new Tracker();

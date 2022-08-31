@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class Waiter {
-    public String deliverFood(FoodType foodType){
+    public String deliverFood(FoodType foodType) throws Exception{
         Ingredient ingredient = new Ingredient();
         switch (foodType){
             case PASTA -> {
@@ -17,7 +17,9 @@ public class Waiter {
                 pizza.prepareFood(ingredient.getPizzaIngredient());
                 return pizza.deliverFood();
             }
+            default -> {
+                throw new Exception("Food Type Not Found");
+            }
         }
-        return null;
     }
 }

@@ -34,7 +34,7 @@ public class WaiterAspect {
     public Object aroundDeliverFood(ProceedingJoinPoint point, FoodType foodType){
         try{
             Object[] args = point.getArgs();
-            args[0] = FoodType.PASTA;
+            args[0] = FoodType.NOT_FOUND;
             return point.proceed(args);
         } catch (Throwable e) {
             throw new RuntimeException(e);
@@ -42,10 +42,16 @@ public class WaiterAspect {
     }
 
     @AfterReturning("execution(* com.avaand.app.service.Waiter.deliverFood(..)) && args(foodType)")
-    public void afterReturningDeliverFood(JoinPoint point, FoodType foodType){
+    public void afterReturningDeliverFood(JoinPoint point, FoodType foodType) throws Exception {
         log.info("==================================================");
         log.info("After Returning : " + point.getSignature());
         log.info("Food Type is : " + ((Waiter) point.getTarget()).deliverFood(foodType));
+    }
+
+    @AfterThrowing("execution(* com.avaand.app.service.Waiter.deliverFodd(..)) && args(foodType))")
+    public void  afterThrowingException(JoinPoint point, FoodType foodType){
+        log.info("==================================================");
+        log.info("Result: " + point.getTarget());
     }
 
 }

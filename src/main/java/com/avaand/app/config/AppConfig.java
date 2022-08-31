@@ -1,11 +1,12 @@
 package com.avaand.app.config;
 
-import com.avaand.app.converter.StringToUserConverter;
+import com.avaand.app.condition.OnUnixSystem;
 import com.avaand.app.converter.tag.ConverterService;
 import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
 import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
 import com.avaand.app.model.BankService;
+import com.avaand.app.proccesor.OperatingSystem;
 import lombok.extern.java.Log;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -27,7 +28,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.validation.Validator;
 
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -46,10 +50,8 @@ import java.util.Set;
 public class AppConfig {
 
     private final ApplicationEventPublisher eventPublisher;
-
     private final BankService bankService;
     private final BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener;
-
 
     public AppConfig(ApplicationEventPublisher eventPublisher, BankService bankService, BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener) {
         this.eventPublisher = eventPublisher;
@@ -86,23 +88,22 @@ public class AppConfig {
         log.info("Application Event is a success !!");
     }
 
-    //@Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 1000)
     public void fixedDelayScheduling(){
         log.info("Fixed Delay : " + System.currentTimeMillis() / 1000);
     }
 
-    //@Scheduled(cron = "30/5 * * * * *")
+    @Scheduled(cron = "30/5 * * * * *")
     public void cronScheduling(){
         log.info("Cron Triggered");
         eventPublisher.publishEvent(new BoomEvent(this,"I am triggered to listen from Boom Event"));
-        eventPublisher.publishEvent(new ApplicationEventManager<String>(this,"A", true));
+        eventPublisher.publishEvent(new ApplicationEventManager<>(this, "A", true));
     }
 
-    //@Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 1000)
     public void fixedRateScheduling(){
         log.info("Fixed Rate : " + System.currentTimeMillis() / 1000);
     }
-
 
     @Bean("conversionService")
     @Primary
@@ -114,9 +115,10 @@ public class AppConfig {
             converters.add((Converter<?, ?>) entry.getValue());
         }
         conversionServiceFactoryBean.setConverters(converters);
-        conversionServiceFactoryBean.afterPropertiesSet(); // Important afterPropertiesSet
+        conversionServiceFactoryBean.afterPropertiesSet(); // important afterPropertiesSet
         return conversionServiceFactoryBean.getObject();
     }
+
 
     @Bean
     @Primary
@@ -128,6 +130,11 @@ public class AppConfig {
         return proxyFactoryBean;
     }
 
-
+    @Bean
+    @Conditional(OnUnixSystem.class)
+    public OperatingSystem.UnixOS unixOS(){
+        log.info("I am on Unix");
+        return new OperatingSystem.UnixOS();
+    }
 
 }

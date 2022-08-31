@@ -11,8 +11,7 @@ public class StringToUserConverter implements Converter<String, User> {
     @Override
     public User convert(String source) {
         String[] split = source.split(",");
-        User user = new User(Double.parseDouble(split[0]), split[1], split[2]);
-        return user;
+        return new User(Double.parseDouble(split[0]), split[1], split[2]);
     }
 }
 
