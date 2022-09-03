@@ -6,4 +6,8 @@ public class OperatingSystem {
 
     }
 
+    public static class LinuxOS{
+
+    }
+
 }

@@ -13,7 +13,6 @@ import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -24,10 +23,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.validation.ConstraintViolation;
-import javax.validation.Valid;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -85,13 +81,13 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
         // Todo: Cache Manager will call the data from the cached data source. Makes it more efficient
         Tracker tracker = new Tracker(1, null);
+        for (int i = 0; i < 1000; i++) {
+            trackerService.findTracker(tracker);
+        }
         trackerService.findTracker(tracker);
-        trackerService.findTracker(tracker);
-
 
         BankService bankService = context.getBean(BankServiceImpl.class);
         bankService.deposit(100);
-
 
         AsynchronousExecutor asynchronousExecutor = context.getBean(AsynchronousExecutor.class);
         CompletableFuture<String> result = asynchronousExecutor.asyncExecutionWithReturnType("Hello World");
@@ -103,15 +99,12 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
             log.info(user.toString());
         }
 
-
         Set<ConstraintViolation<User>> violations = validator.validate(user);
         violations.iterator().forEachRemaining(violation -> {
             log.info(violation.getMessage());
         });
 
     }
-
-
 
     @PreDestroy
     public void onDestroy(){

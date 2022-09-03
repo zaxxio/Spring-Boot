@@ -1,6 +1,6 @@
 package com.avaand.app.config;
 
-import com.avaand.app.condition.OnUnixSystem;
+import com.avaand.app.condition.IfOnUnixBuildSystem;
 import com.avaand.app.converter.tag.ConverterService;
 import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
@@ -9,6 +9,7 @@ import com.avaand.app.model.BankService;
 import com.avaand.app.proccesor.OperatingSystem;
 import lombok.extern.java.Log;
 import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -28,10 +29,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.validation.Validator;
 
-import javax.validation.Validation;
-import javax.validation.ValidatorFactory;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -53,7 +51,9 @@ public class AppConfig {
     private final BankService bankService;
     private final BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener;
 
-    public AppConfig(ApplicationEventPublisher eventPublisher, BankService bankService, BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener) {
+    public AppConfig(ApplicationEventPublisher eventPublisher,
+                     BankService bankService,
+                     BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener) {
         this.eventPublisher = eventPublisher;
         this.bankService = bankService;
         this.bankServiceMethodInterceptorListener = bankServiceMethodInterceptorListener;
@@ -119,7 +119,6 @@ public class AppConfig {
         return conversionServiceFactoryBean.getObject();
     }
 
-
     @Bean
     @Primary
     public ProxyFactoryBean bankServiceMethodInterceptor() {
@@ -131,10 +130,16 @@ public class AppConfig {
     }
 
     @Bean
-    @Conditional(OnUnixSystem.class)
+    @Conditional(IfOnUnixBuildSystem.class)
     public OperatingSystem.UnixOS unixOS(){
-        log.info("I am on Unix");
         return new OperatingSystem.UnixOS();
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "operatingSystem.linux", havingValue = "true")
+    public OperatingSystem.LinuxOS linuxOS(){
+        log.info("I am from linux");
+        return new OperatingSystem.LinuxOS();
     }
 
 }
