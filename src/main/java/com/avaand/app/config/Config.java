@@ -45,15 +45,15 @@ import java.util.Set;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @PropertySource("classpath:application.properties")
 @PropertySource("classpath:/i18n/message_en.properties")
-public class AppConfig {
+public class Config {
 
     private final ApplicationEventPublisher eventPublisher;
     private final BankService bankService;
     private final BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener;
 
-    public AppConfig(ApplicationEventPublisher eventPublisher,
-                     BankService bankService,
-                     BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener) {
+    public Config(ApplicationEventPublisher eventPublisher,
+                  BankService bankService,
+                  BankServiceMethodInterceptorListener bankServiceMethodInterceptorListener) {
         this.eventPublisher = eventPublisher;
         this.bankService = bankService;
         this.bankServiceMethodInterceptorListener = bankServiceMethodInterceptorListener;
@@ -88,7 +88,7 @@ public class AppConfig {
         log.info("Application Event is a success !!");
     }
 
-    @Scheduled(fixedDelay = 1000)
+    //@Scheduled(fixedDelay = 1000)
     public void fixedDelayScheduling(){
         log.info("Fixed Delay : " + System.currentTimeMillis() / 1000);
     }

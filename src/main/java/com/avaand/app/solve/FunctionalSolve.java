@@ -7,12 +7,14 @@ import javax.annotation.PostConstruct;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Stack;
 
 @Log
 @Component
 public class FunctionalSolve {
 
     private final Queue<Node> queue = new LinkedList<>();
+    private final Stack<Node> stack = new Stack<>();
 
     @PostConstruct
     public void init(){
@@ -45,6 +47,22 @@ public class FunctionalSolve {
 
         v0.setVisited(true);
         queue.add(v0);
+
+        v0.setVisited(true);
+        stack.add(v0);
+
+        while (!stack.isEmpty()){
+            Node node = stack.pop();
+            List<Node> nodeList = node.getNeighbors();
+            System.out.print(node.getValue() + " ");
+            for (Node n : nodeList) {
+                if (!n.isVisited()) {
+                    n.setVisited(true);
+                    stack.push(n);
+                }
+            }
+        }
+        System.out.println("");
 
         while (!queue.isEmpty()){
             Node node = queue.poll();

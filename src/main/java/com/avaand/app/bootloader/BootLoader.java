@@ -48,7 +48,8 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       ConfigProperties configProperties,
                       ApplicationContext context,
                       MessageSource messageSource,
-                      ConversionService conversionService, Validator validator) {
+                      ConversionService conversionService,
+                      Validator validator) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
