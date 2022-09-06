@@ -34,7 +34,7 @@ public class WaiterAspect {
     public Object aroundDeliverFood(ProceedingJoinPoint point, FoodType foodType){
         try{
             Object[] args = point.getArgs();
-            args[0] = FoodType.NOT_FOUND;
+            args[0] = FoodType.PASTA;
             return point.proceed(args);
         } catch (Throwable e) {
             throw new RuntimeException(e);

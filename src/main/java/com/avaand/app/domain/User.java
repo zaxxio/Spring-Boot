@@ -1,6 +1,8 @@
 package com.avaand.app.domain;
 
 
+import com.avaand.app.validation.IpAddress;
+import com.avaand.app.validation.MacAddress;
 import lombok.*;
 import lombok.extern.java.Log;
 import org.springframework.util.FileSystemUtils;
@@ -22,4 +24,8 @@ public class User{
     @NotEmpty(message = "Please enter password")
     @Min(value = 4, message = "Please password should be more than 4 digit or character")
     private String password;
+    @IpAddress(message = "")
+    private String ipAddress;
+    @MacAddress
+    private String macAddress;
 }

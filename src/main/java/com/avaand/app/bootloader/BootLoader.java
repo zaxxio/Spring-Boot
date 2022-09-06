@@ -13,11 +13,14 @@ import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -104,6 +107,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         violations.iterator().forEachRemaining(violation -> {
             log.info(violation.getMessage());
         });
+
 
     }
 
