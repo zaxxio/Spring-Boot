@@ -7,16 +7,17 @@ import java.util.regex.Pattern;
 
 public class IpAddressValidator implements ConstraintValidator<IpAddress, String> {
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-        Pattern pattern =
+    public boolean isValid(String v, ConstraintValidatorContext constraintValidatorContext) {
+        if (v == null) return false;
+        Pattern p =
                 Pattern.compile("^([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})$");
-        Matcher matcher = pattern.matcher(value);
+        Matcher m = p.matcher(v);
         try {
-            if (!matcher.matches()) {
+            if (!m.matches()) {
                 return false;
             } else {
                 for (int i = 1; i <= 4; i++) {
-                    int octet = Integer.parseInt(matcher.group(i));
+                    int octet = Integer.parseInt(m.group(i));
                     if (octet > 255) {
                         return false;
                     }

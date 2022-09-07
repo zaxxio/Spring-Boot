@@ -98,7 +98,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         log.info(result.get());
         asynchronousExecutor.asyncExecution();
 
-        User user = conversionService.convert("1,partha@gmail.com,12345", User.class);
+        User user = conversionService.convert("1,partha.com,12345", User.class);
         if (user != null){
             log.info(user.toString());
         }

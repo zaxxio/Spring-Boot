@@ -93,14 +93,14 @@ public class Config {
         log.info("Fixed Delay : " + System.currentTimeMillis() / 1000);
     }
 
-    @Scheduled(cron = "30/5 * * * * *")
+    //@Scheduled(cron = "30/5 * * * * *")
     public void cronScheduling(){
         log.info("Cron Triggered");
         eventPublisher.publishEvent(new BoomEvent(this,"I am triggered to listen from Boom Event"));
         eventPublisher.publishEvent(new ApplicationEventManager<>(this, "A", true));
     }
 
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void fixedRateScheduling(){
         log.info("Fixed Rate : " + System.currentTimeMillis() / 1000);
     }
