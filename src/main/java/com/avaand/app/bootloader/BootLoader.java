@@ -10,6 +10,8 @@ import com.avaand.app.model.BankService;
 import com.avaand.app.model.impl.BankServiceImpl;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.Waiter;
+import com.avaand.app.machine.Event;
+import com.avaand.app.machine.State;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeansException;
@@ -19,9 +21,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -41,6 +44,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final MessageSource messageSource;
     private final ConversionService conversionService;
     private final Validator validator;
+    private final StateMachine<State, Event> stateMachine;
 
     @PostConstruct
     public void onCreate(){
@@ -52,13 +56,15 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       ApplicationContext context,
                       MessageSource messageSource,
                       ConversionService conversionService,
-                      Validator validator) {
+                      Validator validator,
+                      StateMachine<State, Event> stateMachine) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
         this.messageSource = messageSource;
         this.conversionService = conversionService;
         this.validator = validator;
+        this.stateMachine = stateMachine;
     }
 
     @Override
@@ -108,7 +114,11 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
             log.info(violation.getMessage());
         });
 
-
+        log.warning(String.format("current state : %s",stateMachine.getState().getId().name()));
+        stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Event.BORROW)
+                        .setHeader("payloadId","payloadValue")
+                        .build())).blockFirst();
+        log.warning(String.format("current state : %s",stateMachine.getState().getId().name()));
     }
 
     @PreDestroy
