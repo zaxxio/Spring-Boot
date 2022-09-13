@@ -4,11 +4,13 @@ import com.avaand.app.async.AsynchronousExecutor;
 import com.avaand.app.cache.TrackerService;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
+import com.avaand.app.domain.Network;
 import com.avaand.app.domain.User;
 import com.avaand.app.lifecycle.LifeCycle;
 import com.avaand.app.model.BankService;
 import com.avaand.app.model.impl.BankServiceImpl;
 import com.avaand.app.service.FoodType;
+import com.avaand.app.service.NetworkService;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.machine.Event;
 import com.avaand.app.machine.State;
@@ -23,6 +25,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -44,7 +47,10 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final MessageSource messageSource;
     private final ConversionService conversionService;
     private final Validator validator;
-    private final StateMachine<State, Event> stateMachine;
+    private final StateMachineFactory<State, Event> factory;
+
+    private final NetworkService networkService;
+
 
     @PostConstruct
     public void onCreate(){
@@ -57,14 +63,15 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       MessageSource messageSource,
                       ConversionService conversionService,
                       Validator validator,
-                      StateMachine<State, Event> stateMachine) {
+                      StateMachineFactory<State, Event> factory, NetworkService networkService) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
         this.messageSource = messageSource;
         this.conversionService = conversionService;
         this.validator = validator;
-        this.stateMachine = stateMachine;
+        this.factory = factory;
+        this.networkService = networkService;
     }
 
     @Override
@@ -114,11 +121,17 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
             log.info(violation.getMessage());
         });
 
+        /*StateMachine<State, Event> stateMachine = factory.getStateMachine(Long.toString(1));
         log.warning(String.format("current state : %s",stateMachine.getState().getId().name()));
-        stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Event.BORROW)
-                        .setHeader("payloadId","payloadValue")
+        stateMachine.sendEvent(Mono.just(MessageBuilder.withPayload(Event.OFFLINE)
+                        .setHeader("networkId",1)
                         .build())).blockFirst();
-        log.warning(String.format("current state : %s",stateMachine.getState().getId().name()));
+        log.warning(String.format("current state : %s",stateMachine.getState().getId().name()));*/
+
+        Network network = new Network();
+        network.setName("TSLA");
+        network = networkService.newConnection(network);
+        networkService.maintenance(network.getNetworkCardId());
     }
 
     @PreDestroy

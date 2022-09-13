@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class TrackerServiceImpl implements TrackerService {
 
-    private LinkedList<Tracker> trackers;
+    private final LinkedList<Tracker> trackers;
 
     public TrackerServiceImpl(){
         this.trackers = new LinkedList<>(); // initialize on constructor
