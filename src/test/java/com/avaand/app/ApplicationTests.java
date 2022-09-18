@@ -1,6 +1,6 @@
 package com.avaand.app;
 
-import com.avaand.app.proccesor.OperatingSystem;
+import com.avaand.app.processor.OperatingSystem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

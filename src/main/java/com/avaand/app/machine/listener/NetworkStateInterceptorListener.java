@@ -28,13 +28,10 @@ public class NetworkStateInterceptorListener extends StateMachineInterceptorAdap
                                Transition<State, Event> transition,
                                StateMachine<State, Event> stateMachine,
                                StateMachine<State, Event> rootStateMachine) {
-        Optional.ofNullable(message).ifPresent(msg -> {
-            Optional.ofNullable((Long.class.cast(msg.getHeaders().getOrDefault(NetworkServiceImpl.NETWORK_PARAM, -1L))))
-                    .ifPresent(networkId -> {
-                        Optional<Network> network = networkRepository.findById(networkId);
-                        network.get().setState(state.getId());
-                        networkRepository.save(network.get());
-                    });
+        Optional.ofNullable(message).flatMap(msg -> Optional.ofNullable(((Long) msg.getHeaders().getOrDefault(NetworkServiceImpl.NETWORK_PARAM, -1L)))).ifPresent(networkId -> {
+            Optional<Network> network = networkRepository.findById(networkId);
+            network.ifPresent(value -> value.setState(state.getId()));
+            network.ifPresent(networkRepository::save);
         });
     }
 }

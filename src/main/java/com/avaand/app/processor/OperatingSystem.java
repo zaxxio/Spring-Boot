@@ -1,4 +1,4 @@
-package com.avaand.app.proccesor;
+package com.avaand.app.processor;
 
 public class OperatingSystem {
 

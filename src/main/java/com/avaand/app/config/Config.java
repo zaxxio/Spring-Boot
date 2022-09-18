@@ -6,7 +6,8 @@ import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
 import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
 import com.avaand.app.model.BankService;
-import com.avaand.app.proccesor.OperatingSystem;
+import com.avaand.app.processor.Guard;
+import com.avaand.app.processor.OperatingSystem;
 import lombok.extern.java.Log;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,7 +28,6 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.HashSet;
@@ -127,6 +127,11 @@ public class Config {
         proxyFactoryBean.setInterceptorNames("bankServiceLogInterceptor");
         proxyFactoryBean.addListener(bankServiceMethodInterceptorListener);
         return proxyFactoryBean;
+    }
+
+    @Guard(value = true)
+    public boolean failGuard(){
+        return false;
     }
 
     @Bean
