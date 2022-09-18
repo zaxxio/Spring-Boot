@@ -15,7 +15,6 @@ import java.util.List;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-
     private final WebSocketHandler webSocketHandler = new WebSocketHandler() {
 
         final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());

@@ -129,7 +129,7 @@ public class Config {
         return proxyFactoryBean;
     }
 
-    @Guard(value = true)
+    @Guard(value = false)
     public boolean failGuard(){
         return false;
     }
