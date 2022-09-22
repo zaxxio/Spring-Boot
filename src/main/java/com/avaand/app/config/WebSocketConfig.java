@@ -1,5 +1,7 @@
 package com.avaand.app.config;
 
+import com.avaand.app.signaling.impl.SignalHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
@@ -45,11 +47,22 @@ public class WebSocketConfig implements WebSocketConfigurer {
         public boolean supportsPartialMessages() {
             return false;
         }
+
     };
+
+    private final SignalHandler signalHandler;
+
+    public WebSocketConfig(SignalHandler signalHandler) {
+        this.signalHandler = signalHandler;
+    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/chat")
-                .setAllowedOrigins("http://localhost:3000");
+        registry.addHandler(webSocketHandler, "/connectToBroker")
+                .setAllowedOrigins("http://localhost:3000","*");
+
+        registry.addHandler(signalHandler, "/connectTo")
+                .setAllowedOrigins("http://localhost:5173", "*");
     }
+
 }

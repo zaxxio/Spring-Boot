@@ -7,7 +7,8 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 
 public class IfOnUnixBuildSystem implements Condition {
     @Override
-    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    public boolean matches( ConditionContext context, AnnotatedTypeMetadata metadata) {
         return SystemUtils.IS_OS_UNIX;
     }
+
 }
