@@ -1,9 +1,5 @@
 package com.avaand.app.signaling.impl;
 
-import com.avaand.app.signaling.Signal;
-import com.avaand.app.signaling.SignalType;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;

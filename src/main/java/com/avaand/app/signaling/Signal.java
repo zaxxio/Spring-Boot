@@ -3,8 +3,6 @@ package com.avaand.app.signaling;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 public class Signal {
