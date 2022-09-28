@@ -1,9 +1,11 @@
 package com.avaand.app.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class Waiter {
+
     public String deliverFood(FoodType foodType) throws Exception{
         Ingredient ingredient = new Ingredient();
         switch (foodType){

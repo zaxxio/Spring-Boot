@@ -11,14 +11,17 @@ import com.avaand.app.machine.service.MachineService;
 import com.avaand.app.model.BankService;
 import com.avaand.app.model.impl.BankServiceImpl;
 import com.avaand.app.service.FoodType;
+import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
@@ -119,6 +122,14 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         machineService.stop(machine);
         machineService.start(machine);
 
+        ReadableService readableService = context.getBean(ReadableService.class);
+        readableService.sayHello();
+
+    }
+
+    @Bean
+    public AnnotationBeanConfigurerAspect annotationBeanConfigurerAspect(){
+        return AnnotationBeanConfigurerAspect.aspectOf();
     }
 
     @PreDestroy

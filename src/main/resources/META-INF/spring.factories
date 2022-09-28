@@ -1,0 +1,2 @@
+org.springframework.boot.diagnostics.FailureAnalyzer=com.avaand.app.system.analyzer.TypeFailureAnalyzer
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.avaand.app.processor.config.ProcessConfiguration
