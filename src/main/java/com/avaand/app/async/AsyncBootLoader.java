@@ -15,9 +15,7 @@ public class AsyncBootLoader implements CommandLineRunner {
     public static void compute1(){
         synchronized (lock1){
             for (int i = 0; i < 10000; i++) {
-                counter++;
-                //log.info("Counter : "+counter+ " -> Thread : "+ Thread.currentThread().getName());
-            }
+                counter++;}
         }
     }
 
@@ -25,7 +23,6 @@ public class AsyncBootLoader implements CommandLineRunner {
         synchronized (lock2){
             for (int i = 0; i < 10000; i++) {
                 counter++;
-                //log.info("Counter : "+counter+ " -> Thread : "+ Thread.currentThread().getName());
             }
         }
     }
@@ -41,7 +38,7 @@ public class AsyncBootLoader implements CommandLineRunner {
         t1.join();
         t2.join();
 
-        System.out.println("Counter : " + counter);
+        log.info("Counter : " + counter);
     }
 
 

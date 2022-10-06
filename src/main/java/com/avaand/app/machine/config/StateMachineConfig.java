@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.StateContext;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.action.Actions;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
@@ -79,18 +80,15 @@ public class StateMachineConfig extends EnumStateMachineConfigurerAdapter<Machin
 
     @Bean
     public Action<MachineState, MachineEvent> action() {
-        return new Action<MachineState, MachineEvent>() {
-            @Override
-            public void execute(StateContext<MachineState, MachineEvent> stateContext) {
-                //throw new RuntimeException("Error");
-            }
+        return ctx -> {
+
         };
     }
 
     @Bean
     public Action<MachineState, MachineEvent> errorAction() {
-        return stateContext -> {
-            Exception exception = stateContext.getException();
+        return ctx -> {
+            Exception exception = ctx.getException();
             log.info(exception.getMessage());
         };
     }

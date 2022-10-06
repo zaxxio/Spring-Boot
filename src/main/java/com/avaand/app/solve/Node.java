@@ -4,10 +4,10 @@ package com.avaand.app.solve;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Node {
+public final class Node {
 
-    private int value;
-    private List<Node> neighbors;
+    private final int value;
+    private final List<Node> neighbors;
 
     private boolean visited;
 

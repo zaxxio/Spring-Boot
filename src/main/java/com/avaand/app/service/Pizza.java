@@ -8,7 +8,7 @@ public class Pizza implements Food{
 
     @Override
     public void prepareFood(String itemsRequired) {
-        prepareFood = "The Pizza is prepared with :"+ itemsRequired;
+        prepareFood = "The Pizza is prepared with :" + itemsRequired;
     }
 
     @Override

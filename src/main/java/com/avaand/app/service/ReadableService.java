@@ -1,10 +1,10 @@
 package com.avaand.app.service;
 
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 
+@Log
 @Component
 @Configurable(preConstruction = true)
 public class ReadableService {
@@ -16,7 +16,7 @@ public class ReadableService {
     }
 
     public String sayHello() {
-        System.out.println("Hello World");
-       return autoInjected.sayHello();
+        return autoInjected.sayHello();
     }
+
 }

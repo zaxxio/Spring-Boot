@@ -8,8 +8,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "config")
 public class ConfigProperties {
-
     private String username;
     private String password;
-
 }

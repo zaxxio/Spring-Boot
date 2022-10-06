@@ -14,6 +14,7 @@ import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Component
@@ -32,6 +33,7 @@ public class MachineServiceImpl implements MachineService {
         this.machineStateInterceptor = machineStateInterceptor;
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public StateMachine<MachineState, MachineEvent> start(Machine machine) {
         if (machine.getMachineId() == null){
@@ -54,6 +56,7 @@ public class MachineServiceImpl implements MachineService {
         sm.sendEvent(Mono.just(message)).subscribe();
     }
 
+    @Transactional(rollbackOn = Exception.class)
     @Override
     public StateMachine<MachineState, MachineEvent> stop(Machine machine) {
         StateMachine<MachineState, MachineEvent> sm = build(machine.getMachineId());

@@ -16,7 +16,7 @@ public class SignalHandler extends TextWebSocketHandler {
 
     private final List<WebSocketSession> sessions = Collections.synchronizedList(new ArrayList<>());
 
-    private ConcurrentHashMap<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, WebSocketSession> sessionMap = new ConcurrentHashMap<>();
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {

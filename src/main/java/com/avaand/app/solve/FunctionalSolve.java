@@ -4,10 +4,7 @@ import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 @Log
 @Component
@@ -51,10 +48,11 @@ public class FunctionalSolve {
         v0.setVisited(true);
         stack.add(v0);
 
+
         while (!stack.isEmpty()){
             Node node = stack.pop();
             List<Node> nodeList = node.getNeighbors();
-            System.out.print(node.getValue() + " ");
+            System.out.print(node.getValue() + "->");
             for (Node n : nodeList) {
                 if (!n.isVisited()) {
                     n.setVisited(true);

@@ -8,6 +8,5 @@ import org.springframework.statemachine.StateMachine;
 public interface MachineService {
     StateMachine<MachineState, MachineEvent> start(Machine machine);
     StateMachine<MachineState, MachineEvent> stop(Machine machine);
-
     StateMachine<MachineState, MachineEvent> build(Long machineId);
 }

@@ -1,7 +1,6 @@
 package com.avaand.app.bootloader;
 
 import com.avaand.app.async.AsynchronousExecutor;
-import com.avaand.app.cache.TrackerService;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
 import com.avaand.app.domain.User;
@@ -15,6 +14,7 @@ import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect;
 import org.springframework.boot.CommandLineRunner;
@@ -23,15 +23,19 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.integration.channel.QueueChannel;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.PollableChannel;
+import org.springframework.messaging.support.GenericMessage;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.Objects;
 
 @Log
 @Component
@@ -43,7 +47,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final MessageSource messageSource;
     private final ConversionService conversionService;
     private final Validator validator;
-
     private final MachineService machineService;
 
     @PostConstruct
@@ -78,19 +81,19 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         }
 
         log.info(configProperties.getUsername());
-        LifeCycle lifecycleA = context.getBean(LifeCycle.class); // calls new object prototype
-        LifeCycle lifeCycleB = context.getBean(LifeCycle.class); // calls new object prototype
+        var lifecycleA = context.getBean(LifeCycle.class); // calls new object prototype
+        var lifeCycleB = context.getBean(LifeCycle.class); // calls new object prototype
         log.info(String.valueOf(lifecycleA.equals(lifeCycleB)));
 
         // Using Loop to demonstrate CacheManager
-        TrackerService trackerService = context.getBean(TrackerServiceImpl.class);
+        var trackerService = context.getBean(TrackerServiceImpl.class);
         for (int i = 0; i < 10; i++) {
             trackerService.getTrackers();
             log.info("Loop Index -> " + i);
         }
 
         // Todo: Cache Manager will call the data from the cached data source. Makes it more efficient
-        Tracker tracker = new Tracker(1, null);
+        var tracker = new Tracker(1, null);
         for (int i = 0; i < 1000; i++) {
             trackerService.findTracker(tracker);
         }
@@ -99,17 +102,17 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         BankService bankService = context.getBean(BankServiceImpl.class);
         bankService.deposit(100);
 
-        AsynchronousExecutor asynchronousExecutor = context.getBean(AsynchronousExecutor.class);
-        CompletableFuture<String> result = asynchronousExecutor.asyncExecutionWithReturnType("Hello World");
+        var asynchronousExecutor = context.getBean(AsynchronousExecutor.class);
+        var result = asynchronousExecutor.asyncExecutionWithReturnType("Hello World");
         log.info(result.get());
         asynchronousExecutor.asyncExecution();
 
-        User user = conversionService.convert("1,partha.com,12345", User.class);
+        var user = conversionService.convert("1,partha.com,12345", User.class);
         if (user != null){
             log.info(user.toString());
         }
 
-        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        var violations = validator.validate(user);
         violations.iterator().forEachRemaining(violation -> {
             log.info(violation.getMessage());
         });
@@ -122,8 +125,18 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         machineService.stop(machine);
         machineService.start(machine);
 
-        ReadableService readableService = context.getBean(ReadableService.class);
-        readableService.sayHello();
+        var readableService = context.getBean(ReadableService.class);
+        String value = readableService.sayHello();
+        log.info("ReadableService : " + value);
+
+        MessageChannel inputChannel = context.getBean("inputChannel", MessageChannel.class);
+        PollableChannel outputChannel = context.getBean("outputChannel", PollableChannel.class);
+
+        inputChannel.send(new GenericMessage<>(" Mike"));
+
+        String payload = (String) Objects.requireNonNull(outputChannel.receive(0)).getPayload();
+        log.info(payload);
+
 
     }
 
@@ -138,7 +151,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
     }
 

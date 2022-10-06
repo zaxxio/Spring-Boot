@@ -18,7 +18,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.context.support.ConversionServiceFactoryBean;
@@ -26,6 +25,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.integration.config.EnableIntegration;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -41,7 +41,9 @@ import java.util.Set;
 @Configuration
 @EnableCaching
 @EnableScheduling
+@EnableIntegration
 @EnableConfigurationProperties
+@ComponentScan(value = "com.avaand.app")
 @ConfigurationPropertiesScan("com.avaand.app")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @PropertySource("classpath:application.properties")
@@ -97,8 +99,8 @@ public class Config {
     //@Scheduled(cron = "30/5 * * * * *")
     public void cronScheduling(){
         log.info("Cron Triggered");
-        eventPublisher.publishEvent(new BoomEvent(this,"I am triggered to listen from Boom Event"));
-        eventPublisher.publishEvent(new ApplicationEventManager<>(this, "A", true));
+        this.eventPublisher.publishEvent(new BoomEvent(Config.this,"I am triggered to listen from Boom Event"));
+        this.eventPublisher.publishEvent(new ApplicationEventManager<>(Config.this, "A", true));
     }
 
     //@Scheduled(fixedRate = 1000)
@@ -147,5 +149,6 @@ public class Config {
         log.info("I am from linux");
         return new OperatingSystem.LinuxOS();
     }
+
 
 }
