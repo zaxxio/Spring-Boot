@@ -23,11 +23,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.integration.channel.QueueChannel;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.PollableChannel;
-import org.springframework.messaging.support.GenericMessage;
+import org.springframework.integration.channel.DirectChannel;
+import org.springframework.messaging.*;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +32,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.validation.Validator;
 import java.util.Locale;
-import java.util.Objects;
 
 @Log
 @Component
@@ -129,14 +125,18 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         String value = readableService.sayHello();
         log.info("ReadableService : " + value);
 
-        MessageChannel inputChannel = context.getBean("inputChannel", MessageChannel.class);
-        PollableChannel outputChannel = context.getBean("outputChannel", PollableChannel.class);
+        DirectChannel channel = (DirectChannel) context.getBean("inputChannel");
 
-        inputChannel.send(new GenericMessage<>(" Mike"));
+        DirectChannel outputChannel = (DirectChannel) context.getBean("outputChannel");
+        outputChannel.subscribe(new MessageHandler() {
+            @Override
+            public void handleMessage(Message<?> message) throws MessagingException {
+                log.info("Message : " + message.getPayload());
+            }
+        });
 
-        String payload = (String) Objects.requireNonNull(outputChannel.receive(0)).getPayload();
-        log.info(payload);
-
+        channel.send(MessageBuilder.withPayload("Mike").build());
+        channel.send(MessageBuilder.withPayload("Mike").build());
 
     }
 
