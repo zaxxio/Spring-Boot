@@ -26,7 +26,7 @@ public class IntegrationConfig {
         return new DirectChannel();
     }
 
-    @ServiceActivator(inputChannel = "inputChannel", outputChannel = "outputChannel")
+    @ServiceActivator(inputChannel = "inputChannel")
     public Message<String> build(Message<String> message){
         return MessageBuilder.withPayload("Hello, " + message.getPayload()).build();
     }

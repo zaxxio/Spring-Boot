@@ -24,6 +24,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.integration.channel.DirectChannel;
+import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.*;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.validation.Validator;
 import java.util.Locale;
+import java.util.Map;
 
 @Log
 @Component
@@ -125,18 +127,25 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         String value = readableService.sayHello();
         log.info("ReadableService : " + value);
 
-        DirectChannel channel = (DirectChannel) context.getBean("inputChannel");
+        DirectChannel channel = context.getBean("inputChannel", DirectChannel.class);
+        DirectChannel outputChannel = context.getBean("outputChannel", DirectChannel.class);
 
-        DirectChannel outputChannel = (DirectChannel) context.getBean("outputChannel");
-        outputChannel.subscribe(new MessageHandler() {
-            @Override
-            public void handleMessage(Message<?> message) throws MessagingException {
-                log.info("Message : " + message.getPayload());
-            }
-        });
+        outputChannel.subscribe(message -> log.info("Message : " + message.getPayload()));
 
-        channel.send(MessageBuilder.withPayload("Mike").build());
-        channel.send(MessageBuilder.withPayload("Mike").build());
+        Message<String> message = MessageBuilder.withPayload("Mike")
+                .setReplyChannel(outputChannel)
+                .build();
+
+        channel.send(message);
+        channel.send(message);
+
+        MessagingTemplate template = new MessagingTemplate(channel);
+        template.setReceiveTimeout(10);
+        Message<?> output = template.sendAndReceive(message);
+
+        System.out.println(output.getPayload());
+
+
 
     }
 
