@@ -39,8 +39,6 @@ public class AsyncBootLoader implements CommandLineRunner {
         t2.join();
 
         log.info("Counter : " + counter);
-
-
     }
 
 
