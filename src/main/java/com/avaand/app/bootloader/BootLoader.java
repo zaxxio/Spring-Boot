@@ -33,7 +33,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.validation.Validator;
 import java.util.Locale;
-import java.util.Map;
 
 @Log
 @Component
@@ -141,10 +140,11 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
         MessagingTemplate template = new MessagingTemplate(channel);
         template.setReceiveTimeout(10);
-        Message<?> output = template.sendAndReceive(message);
+        Message<String> output = (Message<String>) template.sendAndReceive(message);
 
-        System.out.println(output.getPayload());
-
+        if (output != null){
+            log.info(output.getPayload());
+        }
 
 
     }
