@@ -6,7 +6,6 @@ import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
 import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
 import com.avaand.app.model.BankService;
-import com.avaand.app.processor.Guard;
 import com.avaand.app.processor.OperatingSystem;
 import lombok.extern.java.Log;
 import org.springframework.aop.framework.ProxyFactoryBean;
@@ -132,7 +131,6 @@ public class Config {
         return proxyFactoryBean;
     }
 
-    @Guard(value = false)
     public boolean failGuard(){
         return false;
     }

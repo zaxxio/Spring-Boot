@@ -2,22 +2,21 @@ package com.avaand.app.solve;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class Node {
 
     private final int value;
-    private final List<Node> neighbors;
-
+    private final List<Node> neighbors = new ArrayList<>();
     private boolean visited;
 
     public Node(int value){
         this.value = value;
-        this.neighbors = new ArrayList<>();
     }
 
     public boolean isVisited() {
-        return visited;
+        return !visited;
     }
 
     public void setVisited(boolean visited) {

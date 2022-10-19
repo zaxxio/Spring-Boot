@@ -1,6 +1,7 @@
 package com.avaand.app.config;
 
 import com.avaand.app.signaling.impl.SignalHandler;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketHandler;
@@ -21,24 +22,24 @@ public class WebSocketConfig implements WebSocketConfigurer {
         final List<WebSocketSession> webSocketSessions = Collections.synchronizedList(new ArrayList<>());
 
         @Override
-        public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        public void afterConnectionEstablished(@NotNull WebSocketSession session) throws Exception {
             webSocketSessions.add(session);
         }
 
         @Override
-        public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        public void handleMessage(@NotNull WebSocketSession session, @NotNull WebSocketMessage<?> message) throws Exception {
             for (WebSocketSession webSocketSession : webSocketSessions) {
                 webSocketSession.sendMessage(message);
             }
         }
 
         @Override
-        public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        public void handleTransportError(@NotNull WebSocketSession session, @NotNull Throwable exception) throws Exception {
 
         }
 
         @Override
-        public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
+        public void afterConnectionClosed(@NotNull WebSocketSession session, @NotNull CloseStatus closeStatus) throws Exception {
             webSocketSessions.remove(session);
         }
 

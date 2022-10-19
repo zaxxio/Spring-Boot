@@ -9,6 +9,7 @@ import com.avaand.app.machine.domain.Machine;
 import com.avaand.app.machine.service.MachineService;
 import com.avaand.app.model.BankService;
 import com.avaand.app.model.impl.BankServiceImpl;
+import com.avaand.app.processor.tag.RandomInt;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
@@ -33,12 +34,13 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.validation.Validator;
 import java.util.Locale;
-import java.util.Map;
 
 @Log
 @Component
 public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
+    @RandomInt(min = 0, max = 10)
+    private int randomInt;
     private final Waiter waiter;
     private final ConfigProperties configProperties;
     private ApplicationContext context;
@@ -143,10 +145,11 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         template.setReceiveTimeout(10);
         Message<?> output = template.sendAndReceive(message);
 
-        System.out.println(output.getPayload());
+        if (output != null){
+            System.out.println(output.getPayload());
+        }
 
-
-
+        log.info("Random Int: " + randomInt);
     }
 
     @Bean

@@ -15,9 +15,7 @@ public class Monitor implements SmartLifecycle, LifecycleProcessor {
 
     @Override
     public void stop() {
-
         // Trigger when the shutdownHook is called.
-
     }
 
     @Override

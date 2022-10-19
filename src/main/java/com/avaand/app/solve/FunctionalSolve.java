@@ -54,7 +54,7 @@ public class FunctionalSolve {
             List<Node> nodeList = node.getNeighbors();
             System.out.print(node.getValue() + "->");
             for (Node n : nodeList) {
-                if (!n.isVisited()) {
+                if (n.isVisited()) {
                     n.setVisited(true);
                     stack.push(n);
                 }
@@ -67,7 +67,7 @@ public class FunctionalSolve {
             List<Node> nodeList = node.getNeighbors();
             System.out.print(node.getValue() + " ");
             for (Node n : nodeList) {
-                if (!n.isVisited()) {
+                if (n.isVisited()) {
                     n.setVisited(true);
                     queue.add(n);
                 }

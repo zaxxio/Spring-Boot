@@ -5,6 +5,7 @@ import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 
 public class TypeFailureAnalyzer extends AbstractFailureAnalyzer<BeanNotOfRequiredTypeException> {
+
     @Override
     protected FailureAnalysis analyze(Throwable rootFailure, BeanNotOfRequiredTypeException cause) {
         return new FailureAnalysis(getDescription(cause), getAction(cause), cause);
