@@ -29,6 +29,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.HashSet;
 import java.util.Locale;
@@ -41,6 +42,7 @@ import java.util.Set;
 @EnableCaching
 @EnableScheduling
 @EnableIntegration
+@EnableTransactionManagement
 @EnableConfigurationProperties
 @ComponentScan(value = "com.avaand.app")
 @ConfigurationPropertiesScan("com.avaand.app")

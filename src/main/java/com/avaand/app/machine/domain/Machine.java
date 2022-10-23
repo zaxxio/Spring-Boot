@@ -9,14 +9,10 @@ import javax.persistence.*;
 @Setter
 @Entity(name = "machine")
 public class Machine {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long machineId;
-
     private String machineName;
-
     @Enumerated(EnumType.STRING)
     private MachineState machineState;
-
 }

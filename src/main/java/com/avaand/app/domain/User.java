@@ -16,7 +16,7 @@ import javax.validation.constraints.*;
 @AllArgsConstructor
 public class User{
     @NotNull(message = "Please enter userId.")
-    private Double userId;
+    private Long userId;
     @Email(message = "Please enter email format.")
     @NotEmpty(message = "Please enter username.")
     private String username;

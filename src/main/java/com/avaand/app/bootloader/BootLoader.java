@@ -8,7 +8,6 @@ import com.avaand.app.lifecycle.LifeCycle;
 import com.avaand.app.machine.domain.Machine;
 import com.avaand.app.machine.service.MachineService;
 import com.avaand.app.model.BankService;
-import com.avaand.app.model.impl.BankServiceImpl;
 import com.avaand.app.processor.tag.RandomInt;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.ReadableService;
@@ -33,6 +32,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.validation.Validator;
+import java.util.List;
 import java.util.Locale;
 
 @Log
@@ -50,7 +50,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final MachineService machineService;
 
     @PostConstruct
-    public void onCreate(){
+    public void onInit(){
         log.info("On Create Method");
     }
 
@@ -88,18 +88,18 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         // Using Loop to demonstrate CacheManager
         var trackerService = context.getBean(TrackerServiceImpl.class);
         for (int i = 0; i < 10; i++) {
-            trackerService.getTrackers();
+            List<Tracker> trackers = trackerService.getTrackers();
             log.info("Loop Index -> " + i);
         }
 
         // Todo: Cache Manager will call the data from the cached data source. Makes it more efficient
         var tracker = new Tracker(1, null);
         for (int i = 0; i < 1000; i++) {
-            trackerService.findTracker(tracker);
+            Tracker serviceTracker = trackerService.findTracker(tracker);
         }
         trackerService.findTracker(tracker);
 
-        BankService bankService = context.getBean(BankServiceImpl.class);
+        var bankService = context.getBean(BankService.class);
         bankService.deposit(100);
 
         var asynchronousExecutor = context.getBean(AsynchronousExecutor.class);
@@ -146,7 +146,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         Message<?> output = template.sendAndReceive(message);
 
         if (output != null){
-            System.out.println(output.getPayload());
+            log.info(String.valueOf(output.getPayload()));
         }
 
         log.info("Random Int: " + randomInt);
@@ -158,7 +158,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     }
 
     @PreDestroy
-    public void onDestroy(){
+    public void onDispose(){
         log.info("On Destroy Method");
     }
 
