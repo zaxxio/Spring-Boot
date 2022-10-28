@@ -4,6 +4,7 @@ import com.avaand.app.async.AsynchronousExecutor;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
 import com.avaand.app.domain.User;
+import com.avaand.app.event.StartupEvent;
 import com.avaand.app.lifecycle.LifeCycle;
 import com.avaand.app.machine.domain.Machine;
 import com.avaand.app.machine.service.MachineService;
@@ -12,15 +13,15 @@ import com.avaand.app.processor.tag.RandomInt;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
+import com.avaand.app.storage.StorageService;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.MessageSource;
+import org.springframework.context.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.integration.channel.DirectChannel;
@@ -48,19 +49,23 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final ConversionService conversionService;
     private final Validator validator;
     private final MachineService machineService;
+    private final ApplicationEventPublisher publisher;
+
+    private final StorageService storageService;
 
     @PostConstruct
     public void onInit(){
         log.info("On Create Method");
     }
 
+    @Autowired
     public BootLoader(Waiter waiter,
                       ConfigProperties configProperties,
                       ApplicationContext context,
                       MessageSource messageSource,
                       ConversionService conversionService,
                       Validator validator,
-                      MachineService machineService) {
+                      MachineService machineService, ApplicationEventPublisher publisher, StorageService storageService) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
@@ -68,6 +73,8 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         this.conversionService = conversionService;
         this.validator = validator;
         this.machineService = machineService;
+        this.publisher = publisher;
+        this.storageService = storageService;
     }
 
     @Override
@@ -148,8 +155,11 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         if (output != null){
             log.info(String.valueOf(output.getPayload()));
         }
-
         log.info("Random Int: " + randomInt);
+        publisher.publishEvent(new StartupEvent<String>(this, "Startup"));
+
+        storageService.upload();
+        storageService.streamUpload();
     }
 
     @Bean

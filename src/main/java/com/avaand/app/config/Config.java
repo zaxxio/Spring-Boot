@@ -4,6 +4,7 @@ import com.avaand.app.condition.IfOnUnixBuildSystem;
 import com.avaand.app.converter.tag.ConverterService;
 import com.avaand.app.event.ApplicationEventManager;
 import com.avaand.app.event.BoomEvent;
+import com.avaand.app.event.StartupEvent;
 import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
 import com.avaand.app.model.BankService;
 import com.avaand.app.processor.OperatingSystem;
@@ -85,6 +86,12 @@ public class Config {
         threadPoolTaskScheduler.setPoolSize(5);
         threadPoolTaskScheduler.setThreadNamePrefix("TaskScheduler");
         return threadPoolTaskScheduler;
+    }
+
+
+    @EventListener(condition = "#startupEvent.ctx == 'Startup'")
+    public void eventListener(StartupEvent<String> startupEvent){
+        log.info(startupEvent.getCtx());
     }
 
     @EventListener(condition = "#eventManager.success")
