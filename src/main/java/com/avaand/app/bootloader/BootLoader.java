@@ -24,6 +24,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.core.env.Environment;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.*;
@@ -53,6 +54,8 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
     private final StorageService storageService;
 
+    private final Environment environment;
+
     @PostConstruct
     public void onInit(){
         log.info("On Create Method");
@@ -65,7 +68,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       MessageSource messageSource,
                       ConversionService conversionService,
                       Validator validator,
-                      MachineService machineService, ApplicationEventPublisher publisher, StorageService storageService) {
+                      MachineService machineService, ApplicationEventPublisher publisher, StorageService storageService, Environment environment) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
@@ -75,6 +78,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         this.machineService = machineService;
         this.publisher = publisher;
         this.storageService = storageService;
+        this.environment = environment;
     }
 
     @Override
@@ -158,8 +162,11 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         log.info("Random Int: " + randomInt);
         publisher.publishEvent(new StartupEvent<String>(this, "Startup"));
 
+
         storageService.upload();
         storageService.streamUpload();
+
+
     }
 
     @Bean

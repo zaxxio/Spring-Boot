@@ -19,7 +19,6 @@ public class StorageService {
         this.blobServiceClient = blobServiceClient;
     }
 
-
     public void upload(){
         BlobContainerClient client = blobServiceClient.getBlobContainerClient("videos");
         BlobClient blobClient = client.getBlobClient("myblockblob.txt");
