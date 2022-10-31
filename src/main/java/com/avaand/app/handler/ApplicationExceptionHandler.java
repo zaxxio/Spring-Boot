@@ -10,7 +10,8 @@ public class ApplicationExceptionHandler {
 
 
     @ExceptionHandler(value = Exception.class)
-    public void handle(){
+    public void handle(Exception e){
+        log.warning("Message : " + e.getMessage());
         log.info("Exception Handler");
     }
 
