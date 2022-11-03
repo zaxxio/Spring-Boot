@@ -4,33 +4,36 @@ import lombok.extern.java.Log;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 @Log
 @Component
 public class AsyncBootLoader implements CommandLineRunner {
 
     private static int counter = 0;
-    private static final Object lock1 = new Object();
-    private static final Object lock2 = new Object();
 
-    public static void compute1(){
-        synchronized (lock1){
-            for (int i = 0; i < 10000; i++) {
-                counter++;}
+    private static final ReentrantLock lock = new ReentrantLock(true);
+
+    private static void computeTime1(){
+        lock.lock();
+        for (int i = 0; i < 10000; i++) {
+            counter++;
         }
+        lock.unlock();
     }
 
-    public static void compute2(){
-        synchronized (lock2){
-            for (int i = 0; i < 10000; i++) {
-                counter++;
-            }
+    private static void computeTime2(){
+        lock.lock();
+        for (int i = 0; i < 10000; i++) {
+            counter++;
         }
+        lock.unlock();
     }
 
     @Override
     public void run(String... args) throws Exception {
-        Thread t1  = new Thread(AsyncBootLoader::compute1);
-        Thread t2  = new Thread(AsyncBootLoader::compute2);
+        Thread t1  = new Thread(AsyncBootLoader::computeTime1);
+        Thread t2  = new Thread(AsyncBootLoader::computeTime2);
 
         t1.start();
         t2.start();
@@ -39,6 +42,10 @@ public class AsyncBootLoader implements CommandLineRunner {
         t2.join();
 
         log.info("Counter : " + counter);
+        Thread t3 = new Thread(AsyncBootLoader::computeTime1);
+        Thread t4 = new Thread(AsyncBootLoader::computeTime2);
+        t3.start();
+        t4.start();
     }
 
 

@@ -16,7 +16,7 @@ public final class Node {
     }
 
     public boolean isVisited() {
-        return !visited;
+        return visited;
     }
 
     public void setVisited(boolean visited) {

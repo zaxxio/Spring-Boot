@@ -5,12 +5,14 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import lombok.extern.java.Log;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @Log
 @Service
+@Profile(value = "storage")
 public class StorageService {
 
     // Todo: Azure Storage Client

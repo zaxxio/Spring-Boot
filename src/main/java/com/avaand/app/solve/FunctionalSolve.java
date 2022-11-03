@@ -16,11 +16,11 @@ public class FunctionalSolve {
     @PostConstruct
     public void init(){
 
-        Node v0 = new Node(0);
-        Node v1 = new Node(1);
-        Node v2 = new Node(2);
-        Node v3 = new Node(3);
-        Node v4 = new Node(4);
+        final Node v0 = new Node(0);
+        final Node v1 = new Node(1);
+        final Node v2 = new Node(2);
+        final Node v3 = new Node(3);
+        final Node v4 = new Node(4);
 
         // Todo : Node/Vertex Index 0
         v0.addNode(v1);
@@ -73,7 +73,9 @@ public class FunctionalSolve {
                 }
             }
         }
+
         System.out.println();
+
     }
 
 }

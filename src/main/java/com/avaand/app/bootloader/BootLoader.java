@@ -13,7 +13,6 @@ import com.avaand.app.processor.tag.RandomInt;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
-import com.avaand.app.storage.StorageService;
 import com.avaand.app.system.props.ConfigProperties;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +51,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final MachineService machineService;
     private final ApplicationEventPublisher publisher;
 
-    private final StorageService storageService;
+    //private final StorageService storageService;
 
     private final Environment environment;
 
@@ -68,7 +67,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       MessageSource messageSource,
                       ConversionService conversionService,
                       Validator validator,
-                      MachineService machineService, ApplicationEventPublisher publisher, StorageService storageService, Environment environment) {
+                      MachineService machineService,
+                      ApplicationEventPublisher publisher,
+                      Environment environment) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
@@ -77,7 +78,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         this.validator = validator;
         this.machineService = machineService;
         this.publisher = publisher;
-        this.storageService = storageService;
         this.environment = environment;
     }
 
@@ -163,8 +163,8 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         publisher.publishEvent(new StartupEvent<String>(this, "Startup"));
 
 
-        storageService.upload();
-        storageService.streamUpload();
+        //storageService.upload();
+        //storageService.streamUpload();
 
 
     }
