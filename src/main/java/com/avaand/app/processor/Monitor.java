@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Log
 @Component
 public class Monitor implements SmartLifecycle, LifecycleProcessor {
+
     @Override
     public void start() {
         log.info("SmartLifeCycle ON");

@@ -49,19 +49,24 @@ public class FunctionalSolve {
         stack.add(v0);
 
 
+        // DFS
         while (!stack.isEmpty()){
             Node node = stack.pop();
             List<Node> nodeList = node.getNeighbors();
-            System.out.print(node.getValue() + "->");
+            if (node.isVisited()){
+                System.out.print(node.getValue() + "->");
+            }
             for (Node n : nodeList) {
-                if (n.isVisited()) {
+                if (!n.isVisited()) {
                     n.setVisited(true);
                     stack.push(n);
                 }
             }
         }
+
         System.out.println("");
 
+        // BFS
         while (!queue.isEmpty()){
             Node node = queue.poll();
             List<Node> nodeList = node.getNeighbors();
