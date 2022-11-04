@@ -27,4 +27,5 @@ public class User{
     private String ipAddress;
     @MacAddress(message = "Provide valid Mac address.")
     private String macAddress;
+
 }
