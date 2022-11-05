@@ -3,6 +3,7 @@ package com.avaand.app.bootloader;
 import com.avaand.app.async.AsynchronousExecutor;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
+import com.avaand.app.domain.Pet;
 import com.avaand.app.domain.User;
 import com.avaand.app.event.StartupEvent;
 import com.avaand.app.lifecycle.LifeCycle;
@@ -10,6 +11,7 @@ import com.avaand.app.machine.domain.Machine;
 import com.avaand.app.machine.service.MachineService;
 import com.avaand.app.model.BankService;
 import com.avaand.app.processor.tag.RandomInt;
+import com.avaand.app.repository.PetRepository;
 import com.avaand.app.repository.UserRepository;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.ReadableService;
@@ -180,6 +182,12 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
         User u = updateUser(user);
         System.out.println(new Gson().toJson(u));
+
+        PetRepository repository = context.getBean(PetRepository.class);
+        repository.save(new Pet());
+        repository.save(new Pet());
+        System.out.println(repository.findAll().size());
+
 
 
     }
