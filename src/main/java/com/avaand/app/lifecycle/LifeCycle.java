@@ -1,6 +1,8 @@
 package com.avaand.app.lifecycle;
 
 import com.avaand.app.cache.model.Tracker;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.java.Log;
 import org.aspectj.lang.reflect.InitializerSignature;
 import org.springframework.beans.factory.DisposableBean;
@@ -10,8 +12,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 @Log
 @Component

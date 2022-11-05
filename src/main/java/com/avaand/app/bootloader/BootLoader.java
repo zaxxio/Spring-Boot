@@ -7,8 +7,6 @@ import com.avaand.app.domain.Pet;
 import com.avaand.app.domain.User;
 import com.avaand.app.event.StartupEvent;
 import com.avaand.app.lifecycle.LifeCycle;
-import com.avaand.app.machine.domain.Machine;
-import com.avaand.app.machine.service.MachineService;
 import com.avaand.app.model.BankService;
 import com.avaand.app.processor.tag.RandomInt;
 import com.avaand.app.repository.PetRepository;
@@ -18,6 +16,9 @@ import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import com.google.gson.Gson;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.validation.Validator;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
@@ -34,9 +35,6 @@ import org.springframework.messaging.*;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.validation.Validator;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,7 +50,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final MessageSource messageSource;
     private final ConversionService conversionService;
     private final Validator validator;
-    private final MachineService machineService;
     private final ApplicationEventPublisher publisher;
 
     //private final StorageService storageService;
@@ -73,7 +70,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       MessageSource messageSource,
                       ConversionService conversionService,
                       Validator validator,
-                      MachineService machineService,
                       ApplicationEventPublisher publisher,
                       Environment environment, UserRepository userRepository) {
         this.waiter = waiter;
@@ -82,7 +78,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         this.messageSource = messageSource;
         this.conversionService = conversionService;
         this.validator = validator;
-        this.machineService = machineService;
         this.publisher = publisher;
         this.environment = environment;
         this.userRepository = userRepository;
@@ -136,14 +131,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         violations.iterator().forEachRemaining(violation -> {
             log.info(violation.getMessage());
         });*/
-
-        Machine machine = new Machine();
-        machine.setMachineName("OPTIMUS");
-        machineService.start(machine);
-
-        machine.setMachineId(1L);
-        machineService.stop(machine);
-        machineService.start(machine);
 
         var readableService = context.getBean(ReadableService.class);
         String value = readableService.sayHello();

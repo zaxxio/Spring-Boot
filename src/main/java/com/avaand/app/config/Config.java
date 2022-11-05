@@ -8,11 +8,9 @@ import com.avaand.app.event.StartupEvent;
 import com.avaand.app.interceptor.listener.BankServiceMethodInterceptorListener;
 import com.avaand.app.model.BankService;
 import com.avaand.app.processor.OperatingSystem;
-import com.avaand.app.processor.tag.BootLoader;
 import lombok.extern.java.Log;
 import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -34,7 +32,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import java.lang.reflect.Method;
+
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
