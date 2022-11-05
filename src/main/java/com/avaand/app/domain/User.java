@@ -1,12 +1,13 @@
 package com.avaand.app.domain;
 
 
-import com.avaand.app.validation.IpAddress;
-import com.avaand.app.validation.MacAddress;
 import lombok.*;
 import lombok.extern.java.Log;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.validation.constraints.*;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Log
 @Getter
@@ -14,18 +15,20 @@ import javax.validation.constraints.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity(name = "user_table")
 public class User{
-    @NotNull(message = "Please enter userId.")
-    private Long userId;
-    @Email(message = "Please enter email format.")
-    @NotEmpty(message = "Please enter username.")
+    @NotNull
+    @Id
+    @Column(unique = true, name = "user_id", nullable = false)
+    private String userId = UUID.randomUUID().toString();
+    //@Email(message = "Please enter email format.")
+    //@NotEmpty(message = "Please enter username.")
     private String username;
-    @NotEmpty(message = "Please enter password.")
-    @Min(value = 4, message = "Please password should be more than 4 digit or character.")
+    //@NotEmpty(message = "Please enter password.")
+    //@Min(value = 4, message = "Please password should be more than 4 digit or character.")
     private String password;
-    @IpAddress(message = "Provide valid Ip address.")
+    //@IpAddress(message = "Provide valid Ip address.")
     private String ipAddress;
-    @MacAddress(message = "Provide valid Mac address.")
+    //@MacAddress(message = "Provide valid Mac address.")
     private String macAddress;
-
 }

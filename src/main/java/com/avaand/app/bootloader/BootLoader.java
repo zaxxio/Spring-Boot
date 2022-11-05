@@ -10,10 +10,12 @@ import com.avaand.app.machine.domain.Machine;
 import com.avaand.app.machine.service.MachineService;
 import com.avaand.app.model.BankService;
 import com.avaand.app.processor.tag.RandomInt;
+import com.avaand.app.repository.UserRepository;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
+import com.google.gson.Gson;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
@@ -55,6 +57,8 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
     private final Environment environment;
 
+    private final UserRepository userRepository;
+
     @PostConstruct
     public void onInit(){
         log.info("On Create Method");
@@ -69,7 +73,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       Validator validator,
                       MachineService machineService,
                       ApplicationEventPublisher publisher,
-                      Environment environment) {
+                      Environment environment, UserRepository userRepository) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
@@ -79,6 +83,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         this.machineService = machineService;
         this.publisher = publisher;
         this.environment = environment;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -118,15 +123,17 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         log.info(result.get());
         asynchronousExecutor.asyncExecution();
 
+        /*
         var user = conversionService.convert("1,partha.com,12345", User.class);
         if (user != null){
             log.info(user.toString());
-        }
+        }*/
 
+        /*
         var violations = validator.validate(user);
         violations.iterator().forEachRemaining(violation -> {
             log.info(violation.getMessage());
-        });
+        });*/
 
         Machine machine = new Machine();
         machine.setMachineName("OPTIMUS");
@@ -166,7 +173,29 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         //storageService.upload();
         //storageService.streamUpload();
 
+        User user = createUser(userRepository);
+        System.out.println(new Gson().toJson(user));
 
+        userRepository.findAll();
+
+        User u = updateUser(user);
+        System.out.println(new Gson().toJson(u));
+
+
+    }
+
+    private User updateUser(User user) {
+        System.out.println(user.getUserId());
+        User u = userRepository.findById(user.getUserId()).get();
+        u.setUsername("false@gmail.com");
+        u = userRepository.saveAndFlush(u);
+        return u;
+    }
+
+    private User createUser(UserRepository userRepository) {
+        User user = new User();
+        user.setUsername("Hello World");
+        return userRepository.save(user);
     }
 
     @Bean

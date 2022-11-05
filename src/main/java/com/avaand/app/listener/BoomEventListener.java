@@ -12,4 +12,5 @@ public class BoomEventListener implements ApplicationListener<BoomEvent> {
     public void onApplicationEvent(BoomEvent event) {
         log.info("Boom Event Listener : " + event.getMessage());
     }
+
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 @Log
 @Component
@@ -12,10 +13,11 @@ public class FunctionalSolve {
 
     private final Queue<Node> queue = new LinkedList<>();
     private final Stack<Node> stack = new Stack<>();
+    private final CountDownLatch countDownLatch = new CountDownLatch(0);
+
 
     @PostConstruct
     public void init(){
-
         final Node v0 = new Node(0);
         final Node v1 = new Node(1);
         final Node v2 = new Node(2);
@@ -59,6 +61,7 @@ public class FunctionalSolve {
             for (Node n : nodeList) {
                 if (!n.isVisited()) {
                     n.setVisited(true);
+                    countDownLatch.countDown();
                     stack.push(n);
                 }
             }
