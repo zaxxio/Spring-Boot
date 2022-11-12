@@ -16,9 +16,6 @@ import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import com.google.gson.Gson;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import jakarta.validation.Validator;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
@@ -34,7 +31,10 @@ import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.*;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Validator;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Locale;
 

@@ -1,9 +1,9 @@
 package com.avaand.app.validation;
 
 import com.avaand.app.utility.Utility;
-import jakarta.validation.ConstraintValidator;
-import jakarta.validation.ConstraintValidatorContext;
 
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class IpAddressValidator implements ConstraintValidator<IpAddress, String> {

@@ -1,10 +1,10 @@
 package com.avaand.app.solve;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
