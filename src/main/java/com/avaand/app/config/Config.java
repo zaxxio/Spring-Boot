@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.context.restart.RestartEndpoint;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -158,6 +159,12 @@ public class Config {
     public OperatingSystem.LinuxOS linuxOS(){
         log.info("I am from linux");
         return new OperatingSystem.LinuxOS();
+    }
+
+    @Bean
+    public RestartEndpoint restartEndpoint(){
+        RestartEndpoint restartEndpoint = new RestartEndpoint();
+        return restartEndpoint;
     }
 
 

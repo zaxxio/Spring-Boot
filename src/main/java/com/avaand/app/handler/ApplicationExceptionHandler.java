@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Configuration
 public class ApplicationExceptionHandler {
 
-
     @ExceptionHandler(value = Exception.class)
     public void handle(Exception e){
         log.warning("Message : " + e.getMessage());

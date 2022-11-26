@@ -16,6 +16,8 @@ import com.avaand.app.service.ReadableService;
 import com.avaand.app.service.Waiter;
 import com.avaand.app.system.props.ConfigProperties;
 import com.google.gson.Gson;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
@@ -33,8 +35,6 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Validator;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Locale;
 
@@ -110,6 +110,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         for (int i = 0; i < 1000; i++) {
             Tracker serviceTracker = trackerService.findTracker(tracker);
         }
+
         trackerService.findTracker(tracker);
 
         var bankService = context.getBean(BankService.class);
@@ -174,8 +175,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         repository.save(new Pet());
         repository.save(new Pet());
         System.out.println(repository.findAll().size());
-
-
 
     }
 

@@ -15,7 +15,7 @@ public class ConversionServiceTest {
 
     @Test
     void conversionService(){
-
+        conversionService.convert("1,partho@gmail.com,90", User.class);
     }
 
 }

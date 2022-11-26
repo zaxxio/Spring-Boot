@@ -11,7 +11,6 @@ import java.util.concurrent.locks.ReentrantLock;
 public class AsyncBootLoader implements CommandLineRunner {
 
     private static int counter = 0;
-
     private static final ReentrantLock lock = new ReentrantLock(true);
 
     private static void computeTime1(){
@@ -32,6 +31,7 @@ public class AsyncBootLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
         Thread t1  = new Thread(AsyncBootLoader::computeTime1);
         Thread t2  = new Thread(AsyncBootLoader::computeTime2);
 
@@ -46,6 +46,7 @@ public class AsyncBootLoader implements CommandLineRunner {
         Thread t4 = new Thread(AsyncBootLoader::computeTime2);
         t3.start();
         t4.start();
+
     }
 
 

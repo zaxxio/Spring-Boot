@@ -1,12 +1,12 @@
 package com.avaand.app.solve;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
 
-import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
+
 
 @Log
 @Component
@@ -14,8 +14,6 @@ public class FunctionalSolve {
 
     private final Queue<Node> queue = new LinkedList<>();
     private final Stack<Node> stack = new Stack<>();
-    private final CountDownLatch countDownLatch = new CountDownLatch(0);
-
 
     @PostConstruct
     public void init(){
@@ -62,7 +60,6 @@ public class FunctionalSolve {
             for (Node n : nodeList) {
                 if (!n.isVisited()) {
                     n.setVisited(true);
-                    countDownLatch.countDown();
                     stack.push(n);
                 }
             }

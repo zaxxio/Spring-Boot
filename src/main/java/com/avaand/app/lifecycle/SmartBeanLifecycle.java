@@ -11,12 +11,10 @@ public class SmartBeanLifecycle implements SmartLifecycle {
     public void start() {
         log.info("Bean Creation Started");
     }
-
     @Override
     public void stop() {
         log.info("Bean Creation Finished");
     }
-
     @Override
     public boolean isRunning() {
         log.info("Bean Creation Status");
