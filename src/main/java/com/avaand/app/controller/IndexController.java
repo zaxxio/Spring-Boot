@@ -11,6 +11,11 @@ public class IndexController {
     @Autowired
     private RestartEndpoint restartEndpoint;
 
+    @GetMapping("/hi")
+    public String sayHello(){
+        return "Hello World";
+    }
+
     @GetMapping("/restart")
     public String restart(){
         restartEndpoint.restart();
