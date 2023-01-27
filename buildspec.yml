@@ -13,5 +13,5 @@ phases:
       - echo Build completed successfully
 artifacts:
   files:
-    - target/webapp.jar
+    - target/web.jar
   discard-paths: yes
