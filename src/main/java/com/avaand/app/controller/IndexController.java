@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class IndexController {
 
-    @Autowired
-    private RestartEndpoint restartEndpoint;
+    private final RestartEndpoint restartEndpoint;
+
+    public IndexController(RestartEndpoint restartEndpoint) {
+        this.restartEndpoint = restartEndpoint;
+    }
 
     @GetMapping("/hi")
     public String sayHello(){

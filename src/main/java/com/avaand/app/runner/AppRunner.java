@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Component
 public class AppRunner implements ApplicationRunner {
@@ -23,7 +24,7 @@ public class AppRunner implements ApplicationRunner {
 
         people.stream()
                 .filter(predicate)
-                .toList()
+                .collect(Collectors.toList())
                 .forEach(System.out::println);
 
         Integer apply = incrementOneByFunction.apply(100);
