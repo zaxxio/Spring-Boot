@@ -6,5 +6,4 @@ import org.springframework.context.annotation.Configuration;
 @Log
 @Configuration
 public class PoolConfig {
-
 }

@@ -17,7 +17,7 @@ public class AsynchronousExecutor {
 
     @Async
     public CompletableFuture<String> asyncExecutionWithReturnType(String name){
-        return CompletableFuture.completedFuture(name);
+        return CompletableFuture.supplyAsync(() -> name);
     }
 
 }

@@ -17,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "user_table")
-public class User{
+public class Person {
     @NotNull
     @Id
     @Column(unique = true, name = "user_id", nullable = false)

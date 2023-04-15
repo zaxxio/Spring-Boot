@@ -3,13 +3,17 @@ package com.avaand.app.bootloader;
 import com.avaand.app.async.AsynchronousExecutor;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
+import com.avaand.app.domain.Person;
 import com.avaand.app.domain.Pet;
-import com.avaand.app.domain.User;
+import com.avaand.app.domain.UserEntity;
+import com.avaand.app.dto.PersonDto;
 import com.avaand.app.event.StartupEvent;
 import com.avaand.app.lifecycle.LifeCycle;
+import com.avaand.app.mapper.PersonMapper;
 import com.avaand.app.model.BankService;
 import com.avaand.app.processor.tag.RandomInt;
 import com.avaand.app.repository.PetRepository;
+import com.avaand.app.repository.PersonRepository;
 import com.avaand.app.repository.UserRepository;
 import com.avaand.app.service.FoodType;
 import com.avaand.app.service.ReadableService;
@@ -20,6 +24,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.java.Log;
 import org.jetbrains.annotations.NotNull;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect;
@@ -32,11 +37,13 @@ import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.*;
 import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Validator;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 @Log
 @Component
@@ -51,12 +58,18 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
     private final ConversionService conversionService;
     private final Validator validator;
     private final ApplicationEventPublisher publisher;
+    private final UserRepository userRepository;
 
     //private final StorageService storageService;
 
     private final Environment environment;
 
-    private final UserRepository userRepository;
+    private final PersonRepository personRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    private PersonMapper personMapper = Mappers.getMapper(PersonMapper.class);
 
     @PostConstruct
     public void onInit(){
@@ -71,7 +84,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       ConversionService conversionService,
                       Validator validator,
                       ApplicationEventPublisher publisher,
-                      Environment environment, UserRepository userRepository) {
+                      UserRepository userRepository, Environment environment, PersonRepository personRepository) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
@@ -79,8 +92,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         this.conversionService = conversionService;
         this.validator = validator;
         this.publisher = publisher;
-        this.environment = environment;
         this.userRepository = userRepository;
+        this.environment = environment;
+        this.personRepository = personRepository;
     }
 
     @Override
@@ -163,12 +177,22 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         //storageService.upload();
         //storageService.streamUpload();
 
-        User user = createUser(userRepository);
-        System.out.println(new Gson().toJson(user));
+        Person p = new Person();
+        p.setUserId(UUID.randomUUID().toString());
+        p.setUsername("Partha Sutradhar");
 
-        userRepository.findAll();
+        PersonDto personDto = personMapper.toPersonDto(p);
+        log.warning("Person DTO " + personDto);
 
-        User u = updateUser(user);
+        Person mapperPerson = personMapper.toPerson(personDto);
+        log.warning("Person Mapper " + mapperPerson);
+
+        Person person = createUser(personRepository);
+        System.out.println(new Gson().toJson(person));
+
+        personRepository.findAll();
+
+        Person u = updateUser(person);
         System.out.println(new Gson().toJson(u));
 
         PetRepository repository = context.getBean(PetRepository.class);
@@ -176,20 +200,25 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         repository.save(new Pet());
         System.out.println(repository.findAll().size());
 
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername("partha");
+        userEntity.setPassword(passwordEncoder.encode("12345678"));
+        userRepository.save(userEntity);
+
     }
 
-    private User updateUser(User user) {
-        System.out.println(user.getUserId());
-        User u = userRepository.findById(user.getUserId()).get();
+    private Person updateUser(Person person) {
+        System.out.println(person.getUserId());
+        Person u = personRepository.findById(person.getUserId()).get();
         u.setUsername("false@gmail.com");
-        u = userRepository.saveAndFlush(u);
+        u = personRepository.saveAndFlush(u);
         return u;
     }
 
-    private User createUser(UserRepository userRepository) {
-        User user = new User();
-        user.setUsername("Hello World");
-        return userRepository.save(user);
+    private Person createUser(PersonRepository personRepository) {
+        Person person = new Person();
+        person.setUsername("Hello World");
+        return personRepository.save(person);
     }
 
     @Bean
