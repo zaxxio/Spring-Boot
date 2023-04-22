@@ -18,6 +18,7 @@ public class Application {
        SpringApplication.run(Application.class, args);
     }
 
+
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public CommandLineRunner commandLineRunner2(){

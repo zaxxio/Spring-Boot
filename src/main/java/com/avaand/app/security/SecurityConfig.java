@@ -53,7 +53,7 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("*");
+                registry.addMapping("/**").allowedMethods("*").allowedHeaders("*");
             }
         };
     }
@@ -70,7 +70,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(context.getBean(AuthenticationManager.class));
         jwtAuthenticationFilter.setFilterProcessesUrl("/api/signin");
-        http.csrf().disable()
+        http
+                .cors().and()
+                .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/signin").permitAll()
                 .and()

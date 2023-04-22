@@ -3,12 +3,11 @@ package com.avaand.app.bootloader;
 import com.avaand.app.async.AsynchronousExecutor;
 import com.avaand.app.cache.impl.TrackerServiceImpl;
 import com.avaand.app.cache.model.Tracker;
-import com.avaand.app.domain.Person;
-import com.avaand.app.domain.Pet;
-import com.avaand.app.domain.UserEntity;
+import com.avaand.app.domain.*;
 import com.avaand.app.dto.PersonDto;
 import com.avaand.app.event.StartupEvent;
 import com.avaand.app.lifecycle.LifeCycle;
+import com.avaand.app.mapper.EmployeeMapper;
 import com.avaand.app.mapper.PersonMapper;
 import com.avaand.app.model.BankService;
 import com.avaand.app.processor.tag.RandomInt;
@@ -41,6 +40,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Validator;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -66,10 +66,11 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
 
     private final PersonRepository personRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    private PersonMapper personMapper = Mappers.getMapper(PersonMapper.class);
+    private final PersonMapper personMapper = Mappers.getMapper(PersonMapper.class);
+
+    private final EmployeeMapper employeeMapper = Mappers.getMapper(EmployeeMapper.class);
 
     @PostConstruct
     public void onInit(){
@@ -84,7 +85,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       ConversionService conversionService,
                       Validator validator,
                       ApplicationEventPublisher publisher,
-                      UserRepository userRepository, Environment environment, PersonRepository personRepository) {
+                      UserRepository userRepository, Environment environment, PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
@@ -95,6 +96,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         this.userRepository = userRepository;
         this.environment = environment;
         this.personRepository = personRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -171,7 +173,7 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
             log.info(String.valueOf(output.getPayload()));
         }
         log.info("Random Int: " + randomInt);
-        publisher.publishEvent(new StartupEvent<String>(this, "Startup"));
+        publisher.publishEvent(new StartupEvent<>(this, "Startup"));
 
 
         //storageService.upload();
@@ -180,6 +182,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         Person p = new Person();
         p.setUserId(UUID.randomUUID().toString());
         p.setUsername("Partha Sutradhar");
+
+        Employee employee = employeeMapper.toEmployee(p);
+        log.warning("Employee " + employee);
 
         PersonDto personDto = personMapper.toPersonDto(p);
         log.warning("Person DTO " + personDto);

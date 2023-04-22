@@ -40,6 +40,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         UserEntity user = (UserEntity) authResult.getPrincipal();
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
 
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range");
+
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
