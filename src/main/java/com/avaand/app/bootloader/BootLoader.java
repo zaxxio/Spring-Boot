@@ -40,7 +40,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Validator;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
