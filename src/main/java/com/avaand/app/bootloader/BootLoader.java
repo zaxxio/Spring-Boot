@@ -32,10 +32,6 @@ import org.springframework.context.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.Environment;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.core.MessagingTemplate;
-import org.springframework.messaging.*;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Validator;
@@ -84,7 +80,10 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
                       ConversionService conversionService,
                       Validator validator,
                       ApplicationEventPublisher publisher,
-                      UserRepository userRepository, Environment environment, PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+                      UserRepository userRepository,
+                      Environment environment,
+                      PersonRepository personRepository,
+                      PasswordEncoder passwordEncoder) {
         this.waiter = waiter;
         this.configProperties = configProperties;
         this.context = context;
@@ -152,25 +151,6 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         String value = readableService.sayHello();
         log.info("ReadableService : " + value);
 
-        DirectChannel channel = context.getBean("inputChannel", DirectChannel.class);
-        DirectChannel outputChannel = context.getBean("outputChannel", DirectChannel.class);
-
-        outputChannel.subscribe(message -> log.info("Message : " + message.getPayload()));
-
-        Message<String> message = MessageBuilder.withPayload("Mike")
-                .setReplyChannel(outputChannel)
-                .build();
-
-        channel.send(message);
-        channel.send(message);
-
-        MessagingTemplate template = new MessagingTemplate(channel);
-        template.setReceiveTimeout(10);
-        Message<?> output = template.sendAndReceive(message);
-
-        if (output != null){
-            log.info(String.valueOf(output.getPayload()));
-        }
         log.info("Random Int: " + randomInt);
         publisher.publishEvent(new StartupEvent<>(this, "Startup"));
 
@@ -205,10 +185,9 @@ public class BootLoader implements CommandLineRunner, ApplicationContextAware {
         System.out.println(repository.findAll().size());
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername("partha");
+        userEntity.setUsername("Partha");
         userEntity.setPassword(passwordEncoder.encode("12345678"));
         userRepository.save(userEntity);
-
     }
 
     private Person updateUser(Person person) {

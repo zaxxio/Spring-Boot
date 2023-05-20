@@ -23,6 +23,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
@@ -52,6 +53,7 @@ import java.util.Set;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @PropertySource("classpath:application.properties")
 @PropertySource("classpath:/i18n/message_en.properties")
+@ImportResource(locations = "classpath:/context.xml")
 public class Config {
 
     private final ApplicationEventPublisher eventPublisher;

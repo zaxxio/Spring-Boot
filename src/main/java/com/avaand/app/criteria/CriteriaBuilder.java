@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class CriteriaBuilder<T> {
-    private Criteria<T> criteria;
-    private List<T> filteredItems = new ArrayList<>();
+    private final Criteria<T> criteria;
+    private final List<T> filteredItems = new ArrayList<>();
 
     public CriteriaBuilder(){
         this.criteria = new Criteria<>();

@@ -19,7 +19,6 @@ public class IndexController {
     @GetMapping(value = "/hi", produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<Object> sayHello(){
         return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
     }
 
     @GetMapping("/restart")

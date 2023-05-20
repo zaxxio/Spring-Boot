@@ -47,8 +47,8 @@ public class AppRunner implements ApplicationRunner {
     }
 
     static class Person{
-        private String name;
-        private Gender gender;
+        private final String name;
+        private final Gender gender;
 
         public Person(String name, Gender gender) {
             this.name = name;

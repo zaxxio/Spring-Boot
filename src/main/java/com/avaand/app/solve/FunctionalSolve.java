@@ -65,7 +65,7 @@ public class FunctionalSolve {
             }
         }
 
-        System.out.println("");
+        System.out.println();
 
         // BFS
         while (!queue.isEmpty()){
